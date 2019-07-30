@@ -43,7 +43,7 @@ module.exports = class HapiJWTCouch{
     }
 
     promptUsernamePassword(){
-        var self = this;
+        const self = this;
         return new Promise(function(resolve, reject){
             var schema = {
                 properties: {
@@ -69,7 +69,7 @@ module.exports = class HapiJWTCouch{
     }
 
     promptServer(){
-        var self = this;
+        const self = this;
         return new Promise(function(resolve, reject){
             var schema = {
                 properties: {
@@ -90,7 +90,7 @@ module.exports = class HapiJWTCouch{
     }
 
     start(){
-        var self = this;
+        const self = this;
         return self.promptServer()
         .then(function(server){
             self.setServer(server);
@@ -103,7 +103,7 @@ module.exports = class HapiJWTCouch{
 
     testUserToken(token){
         var jwt = jws.decode(token.token);
-        var self = this;
+        const self = this;
 
         if(jwt.exp && jwt.exp < Date.now() / 1000){
             return false;
@@ -114,7 +114,7 @@ module.exports = class HapiJWTCouch{
     }
 
     setUserToken(token){
-        var self = this;
+        const self = this;
         if(_.isObject(token)){
             if(token.token){
                 self.auth.bearer = token.token;
@@ -136,7 +136,7 @@ module.exports = class HapiJWTCouch{
 
     //Here the implementation of different functions starts
     createUser(user){
-        var self = this;
+        const self = this;
         return new Promise(function(resolve, reject){
             var options = {
                 url: self.getServer() + "/auth/user",
@@ -156,7 +156,7 @@ module.exports = class HapiJWTCouch{
     }
 
     resetPassword(user){
-        var self = this;
+        const self = this;
         return new Promise(function(resolve, reject){
             var options = {
                 url: self.getServer() + "/auth/reset",
@@ -176,7 +176,7 @@ module.exports = class HapiJWTCouch{
     }
 
     userLogin(user){
-        var self = this;
+        const self = this;
         return new Promise(function(resolve, reject){
             var options = {
                 url: self.getServer() + "/auth/login",
@@ -199,7 +199,7 @@ module.exports = class HapiJWTCouch{
     }
 
     getUser(){
-        var self = this;
+        const self = this;
         return new Promise(function(resolve, reject){
             var options = {
                 url: self.getServer() + "/auth/user",
@@ -219,7 +219,7 @@ module.exports = class HapiJWTCouch{
     }
 
     getUsers(){
-        var self = this;
+        const self = this;
         return new Promise(function(resolve, reject){
             var options = {
                 url: self.getServer() + "/auth/users",
@@ -239,7 +239,7 @@ module.exports = class HapiJWTCouch{
     }
 
     updateUser(userinfo){
-        var self = this;
+        const self = this;
         return new Promise(function(resolve, reject){
 
             var usinfo = _.clone(userinfo);
@@ -267,7 +267,7 @@ module.exports = class HapiJWTCouch{
     }
 
     updateUsers(userinfo){
-        var self = this;
+        const self = this;
         return new Promise(function(resolve, reject){
             var options = {
                 url: self.getServer() + "/auth/users",
@@ -288,7 +288,7 @@ module.exports = class HapiJWTCouch{
     }
 
     deleteUser(){
-        var self = this;
+        const self = this;
         return new Promise(function(resolve, reject){
             var options = {
                 url: self.getServer() + "/auth/user",
@@ -308,7 +308,7 @@ module.exports = class HapiJWTCouch{
     }
 
     deleteUsers(user){
-        var self = this;
+        const self = this;
         return new Promise(function(resolve, reject){
             var options = {
                 url: self.getServer() + "/auth/users",
@@ -326,5 +326,31 @@ module.exports = class HapiJWTCouch{
                 }
             });
         });
+    }
+
+    getSignedData(data, expires){
+        const self = this;
+        return new Promise(function(resolve, reject){
+            var options = {
+                url: self.getServer() + "/auth/token",
+                method: 'GET',
+                agentOptions: self.agentOptions,
+                auth: self.auth,
+                json: data
+            }
+
+            request(options, function(err, res, body){
+                if(err){
+                    reject(err);
+                }else{
+                    resolve(body);
+                }
+            });
+        });
+    }
+
+    getUserToken(email, expires){
+        const self = this;
+        return self.getSignedData({email}, expires);
     }
 }
