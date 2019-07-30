@@ -340,7 +340,7 @@ module.exports = function (server, conf) {
     */
 
     server.route({
-        method: 'GET',
+        method: 'POST',
         path: '/auth/token',
         config: {
             auth: {
