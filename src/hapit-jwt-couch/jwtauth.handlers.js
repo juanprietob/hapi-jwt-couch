@@ -453,7 +453,16 @@ module.exports = function (server, conf) {
 		}
 	}
 
+	handler.getSignedData = function(req, rep){
+		var data = req.payload.data;
+		var expires = req.payload.expires;
+		
+		var algorithm = _.clone(conf.algorithm);
+		algorithm.expiresIn = expires;
 
+		return server.methods.jwtauth.sign(data, algorithm);
+		
+	}
 
 	return handler;
 }

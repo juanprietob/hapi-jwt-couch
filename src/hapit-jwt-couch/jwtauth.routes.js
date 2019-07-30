@@ -334,4 +334,29 @@ module.exports = function (server, conf) {
             description: 'Update scope list'
         }
     });
+
+    /*
+    *   Get a signed token that lasts x amount of days. 
+    */
+
+    server.route({
+        method: 'GET',
+        path: '/auth/token',
+        config: {
+            auth: {
+                strategy: 'token',
+                scope: ['admin']
+            },
+            handler: handlers.getSignedData,
+            validate: {
+                query: false,
+                payload: Joi.object().keys({
+                    data: Joi.object(),
+                    expires: Joi.string().alphanum()
+                }),
+                params: null
+            },
+            description: 'Get a signed token that lasts x amount of days. data is the object to sign and expires is the amount of time (7d, 3h, 1m, ..., etc.). '
+        }
+    });
 }
