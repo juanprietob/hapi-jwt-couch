@@ -333,7 +333,7 @@ module.exports = class HapiJWTCouch{
         return new Promise(function(resolve, reject){
             var options = {
                 url: self.getServer() + "/auth/token",
-                method: 'GET',
+                method: 'POST',
                 agentOptions: self.agentOptions,
                 auth: self.auth,
                 json: data
