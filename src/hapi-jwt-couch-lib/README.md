@@ -227,11 +227,15 @@ Deletes a user from the DB, must be admin
 
 ### Start the test server
 
+The server script is in the package [hapi-jwt-couch](https://www.npmjs.com/package/hapi-jwt-couch).
+
 ----
-	node testserver.js
+	npm test
 ----
 
 ### Run all tests
+
+The actual tests are in this package. 
 
 ----
 	npm test
