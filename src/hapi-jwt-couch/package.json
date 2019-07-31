@@ -25,6 +25,11 @@
   },
   "homepage": "https://github.com/juanprietob/hapi-jwt-couch#readme",
   "devDependencies": {
+    "@hapi/good": "^8.2.0",
+    "@hapi/good-console": "^8.1.0",
+    "@hapi/good-squeeze": "^5.2.0",
+    "@hapi/hapi": "^18.3.1",
+    "@juanprietob/hapi-auth-jwt": "github:juanprietob/hapi-auth-jwt#master",
     "hapi": "^13.0.0",
     "lab": "^10.8.2",
     "nodemailer-stub-transport": "^1.1.0"

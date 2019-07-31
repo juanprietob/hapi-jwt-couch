@@ -135,15 +135,17 @@ The Joi objects shown here for password, user and login are used by default.
 
 ## Testing 
 
-Start the test server
-
-----
-	node test/server.js
-----
-
-Run all tests
+Start the server. The script test starts the server and adds the plugin. 
 
 ----
 	npm test
 ----
+
+### Run the tests using hapi-jwt-couch-lib
+
+The test for this package are in [hapi-jwt-couch-lib](https://www.npmjs.com/package/hapi-jwt-couch-lib)
+
+---
+	npm test
+---
 

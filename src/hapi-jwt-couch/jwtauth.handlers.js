@@ -371,7 +371,7 @@ module.exports = function (server, conf) {
 			
 			var info = _.pluck(info, "value");
 			if(info.length === 0){
-				throw Boom.unauthorized("I don't know who you are, you need to create an account first!");
+				return Boom.notFound("User not found, please create an account.");
 			}
 
 			info = info[0];
@@ -416,8 +416,7 @@ module.exports = function (server, conf) {
 			
 		})
 		.catch(function(err){
-			console.log(err)
-			return (Boom.wrap(err));
+			return Boom.badImplementation(err);
 		});
 
 		
