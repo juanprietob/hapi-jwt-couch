@@ -94,7 +94,7 @@ module.exports = class HapiJWTCouch{
         return self.promptServer()
         .then(function(server){
             self.setServer(server);
-            return self.promptUsernamePassword()
+            return self.promptUsernamePassword();
         })
         .then(function(user){
             return self.userLogin(user);
@@ -108,7 +108,7 @@ module.exports = class HapiJWTCouch{
         if(jwt.exp && jwt.exp < Date.now() / 1000){
             return false;
         }else if(jwt.exp === undefined){
-            console.log("WARNING! The token does not have an expiry date. Tokens without expiry date were deprecated. The server could be running an old version. Please contact the server administrator.");
+            console.error("WARNING! The token does not have an expiry date. Tokens without expiry date were deprecated. The server could be running an old version. Please contact the server administrator.");
         }
         return true;
     }
@@ -189,11 +189,12 @@ module.exports = class HapiJWTCouch{
                 if(err){
                     reject(err);
                 }else if(body && body.token){
-                    self.auth.bearer = body.token
+                    self.auth.bearer = body.token;
                     resolve(body);
                 }else{
-                    reject(body);
+                    resolve(body);
                 }
+
             });
         });
     }
@@ -336,7 +337,7 @@ module.exports = class HapiJWTCouch{
                 method: 'POST',
                 agentOptions: self.agentOptions,
                 auth: self.auth,
-                json: data
+                json: {data, expires}
             }
 
             request(options, function(err, res, body){
@@ -349,8 +350,9 @@ module.exports = class HapiJWTCouch{
         });
     }
 
-    getUserToken(email, expires){
-        const self = this;
-        return self.getSignedData({email}, expires);
+    decodeToken(token){
+        var decoded = jws.decode(token, {complete: true});
+        return Promise.resolve(decoded);
     }
+    
 }

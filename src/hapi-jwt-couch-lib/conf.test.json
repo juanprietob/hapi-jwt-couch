@@ -1,0 +1,9 @@
+{
+	"test": {
+		"server": "http://localhost:4000",
+		"userdb": {
+			"hostname": "http://localhost:5984",
+			"database": "hapijwtcouch"
+		}
+	}
+}

@@ -141,6 +141,27 @@ lab.experiment("Test hapi-jwt-couch-lib auth jwt", function(){
         });
     });
 
+    lab.test('Get signed data', function(){
+
+        var data = {
+            id: "someid",
+            name: "My name"
+        }
+
+        return hapijwtcouch.getSignedData(data, "7d")
+        .then(function(res){
+            return hapijwtcouch.decodeToken(res.token);
+        })
+        .then(function(res){
+            Joi.assert(res.payload, Joi.object().keys({ 
+                id: Joi.string().valid("someid"),
+                name: Joi.string().valid("My name"),
+                iat: Joi.number(),
+                exp: Joi.number()
+            }));
+        });
+    });
+
 
     var newUserToken = '';
     var newuser = {
@@ -239,5 +260,34 @@ lab.experiment("Test hapi-jwt-couch-lib auth jwt", function(){
         });
         
     });
+
+    lab.test('returns true when unknown user tries to login', function(){
+
+        var user = {
+            email: "hapi.jwt.couch2@gmail.com",
+            password: "SomePassword90!"
+        }
+
+        return hapijwtcouch.userLogin(user)
+        .then(function(res){
+            Joi.assert(res.statusCode, 401);
+        });
+    });
+
+    lab.test('returns true when recovery email is sent by unknown user', function(){
+
+        var user = {
+            email: "hapi.jwt.couch2@gmail.com",
+            password: "SomePassword90!"
+        }
+
+        return hapijwtcouch.resetPassword({
+            email: user.email
+        })
+        .then(function(res){
+            Joi.assert(res.statusCode, 404);
+            Joi.assert(res.message, Joi.string().valid('User not found, please create an account.'));
+        });
+    });    
 
 });
