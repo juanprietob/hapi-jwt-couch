@@ -41,7 +41,7 @@
     "couch-provider": "^2.1.2",
     "couch-update-views": "^1.0.5",
     "jsonwebtoken": "^7.4.3",
-    "nodemailer": "^2.3.2",
+    "nodemailer": "^6.4.16",
     "underscore": "^1.8.3"
   }
 }
