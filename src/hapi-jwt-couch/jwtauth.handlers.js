@@ -362,6 +362,30 @@ module.exports = function (server, conf) {
 		}
 	}
 
+	const sendEmail = function(email, subject, message){
+		var mailOptions = {
+		    from: conf.mailer.from,
+		    to: email,
+		    subject: subject, // Subject line
+		    html: message
+		};
+		return new Promise(function(resolve, reject){
+			transporter.sendMail(mailOptions, function(error, info){
+			    if(error){
+			        reject(Boom.badImplementation(error));
+			    }else{
+			    	resolve();
+			    }
+			});
+		})
+	}
+
+	server.method({
+	    name: 'dcbia.sendEmail',
+	    method: sendEmail,
+	    options: {}
+	});
+
 	handler.resetPassword = function(req, rep){
 		
 		var email = req.payload.email;
@@ -393,25 +417,15 @@ module.exports = function (server, conf) {
 				uri = conf.mailer.uri;
 			}
 			
+			var subject = 'Password reset'
+			
 			message = message.replace("@USERNAME@", info.name);
 			message = message.replace("@SERVER@", uri);
 			message = message.replace("@TOKEN@", token.token);
-
-			var mailOptions = {
-			    from: conf.mailer.from,
-			    to: email,
-			    subject: 'Password reset', // Subject line
-			    html: message
-			};
 			
-			return new Promise(function(resolve, reject){
-				transporter.sendMail(mailOptions, function(error, info){
-				    if(error){
-				        reject(Boom.badImplementation(error));
-				    }else{
-				    	resolve("An email has been sent to recover your password.");
-				    }
-				});
+			return sendEmail(email, subject, message)
+			.then(()=>{
+				return "An email has been sent to recover your password."
 			})
 			
 		})
